@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+torch
+transformers
+safetensors
+openai
+pandas
+openpyxl
+python-dotenv

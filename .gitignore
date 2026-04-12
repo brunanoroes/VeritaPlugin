@@ -1,0 +1,26 @@
+# Modelo BERT (arquivo muito grande para o GitHub - 416MB)
+modelo_bert/model.safetensors
+
+# Variáveis de ambiente e segredos
+.env
+
+# Datasets e resultados (arquivos pesados)
+*.xlsx
+backup_rag_*.xlsx
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Ambiente virtual
+venv/
+.venv/
+env/
+
+# IDEs
+.vscode/
+.idea/
+*.DS_Store
