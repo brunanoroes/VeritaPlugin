@@ -30,3 +30,8 @@ env/
 
 # Logs
 *.log
+
+# PyInstaller
+dist/
+build/
+*.spec
