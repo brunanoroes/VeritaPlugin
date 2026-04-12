@@ -4,6 +4,9 @@ modelo_bert/model.safetensors
 # Variáveis de ambiente e segredos
 .env
 
+# Controle de instalação local
+.instalado
+
 # Datasets e resultados (arquivos pesados)
 *.xlsx
 backup_rag_*.xlsx

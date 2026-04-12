@@ -9,7 +9,7 @@ from classificador_bert import classificar_mensagem
 
 # ── CONFIGURAÇÃO ──────────────────────────────────────────────────────────────
 
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+_client_padrao = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 ARQUIVO_ENTRADA  = "BrScamsFacebook.xlsx"
 ARQUIVO_SAIDA    = "dataset_teste_rag.xlsx"
@@ -100,7 +100,7 @@ def validar_leis(base_legal_texto: str, categoria: str) -> tuple[str, bool]:
 
 # ── CHAMADA À OPENAI ──────────────────────────────────────────────────────────
 
-def analisar_mensagem(mensagem: str, categoria: str, score: float) -> dict:
+def analisar_mensagem(mensagem: str, categoria: str, score: float, api_key: str = "") -> dict:
     """
     Monta o prompt RAG e chama a OpenAI Responses API com Structured Outputs.
     Retorna o dicionário com os campos gerados, já com leis validadas.
@@ -114,6 +114,7 @@ def analisar_mensagem(mensagem: str, categoria: str, score: float) -> dict:
     }
 
     try:
+        client = OpenAI(api_key=api_key) if api_key else _client_padrao
         messages = montar_prompt(mensagem, categoria, score)
 
         # Schema JSON estrito para Structured Outputs

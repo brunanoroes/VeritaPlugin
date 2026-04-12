@@ -190,8 +190,12 @@
 <body>
 <div class="wizard-card">
 
-  <div class="logo">🛡️ Verita<span>Plugin</span></div>
-  <div style="color:#888;font-size:.85rem;margin-bottom:4px;">Detector de phishing com IA</div>
+  <div class="logo">
+    <img src="icon.png" alt="VeritaPlugin" style="width:40px;height:40px;vertical-align:middle;margin-right:8px;object-fit:contain;">
+    <span style="color: #1CE47E;">Verita</span>
+    <span style="color: #164CEE;">Plugin</span>
+  </div>
+  <div style="color:#888;font-size:.85rem;margin-bottom:4px;">Detector de golpes utilizando IA</div>
 
   <div class="steps-bar">
     <div class="step-dot active" id="dot-1">1</div>
@@ -319,45 +323,44 @@
 
   <!-- ETAPA 4 -->
   <div class="step" id="step-4">
-    <div class="step-title">Configurar o servidor</div>
+    <div class="step-title">Sua chave da OpenAI</div>
     <div class="step-desc">
-      Agora vamos instalar as dependências e configurar sua chave da OpenAI.
-      Siga os passos abaixo com atenção.
+      O VeritaPlugin usa a IA da OpenAI para analisar publicações.
+      Insira sua chave abaixo — ela fica salva só no seu navegador e nunca é compartilhada.
     </div>
 
     <div class="instruction">
       <div class="instruction-num">1</div>
       <div class="instruction-text">
-        Abra a pasta onde você salvou o VeritaPlugin no seu computador.
+        Acesse <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a>,
+        faça login e clique em <strong>"Create new secret key"</strong>.
       </div>
     </div>
     <div class="instruction">
       <div class="instruction-num">2</div>
       <div class="instruction-text">
-        Dê dois cliques no arquivo <span class="code-inline">instalar.bat</span>.<br>
-        Uma janela preta vai abrir e instalar tudo automaticamente.
+        Copie a chave gerada (começa com <span class="code-inline">sk-...</span>)
+        e cole no campo abaixo.
       </div>
     </div>
-    <div class="instruction">
-      <div class="instruction-num">3</div>
-      <div class="instruction-text">
-        Quando solicitado, cole sua chave da OpenAI
-        (começa com <span class="code-inline">sk-...</span>).<br>
-        Você pode criar uma chave em
-        <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a>.
+
+    <div style="margin-top:16px;">
+      <label style="font-size:.9rem;font-weight:600;color:#333;display:block;margin-bottom:6px;">
+        Chave da OpenAI
+      </label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="password" id="apiKeyInput" placeholder="sk-..."
+          style="flex:1;padding:10px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:.9rem;font-family:monospace;outline:none;">
+        <button id="btn-toggle-key" style="background:none;border:1.5px solid #ddd;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:1rem;" title="Mostrar/ocultar">👁</button>
       </div>
-    </div>
-    <div class="instruction">
-      <div class="instruction-num">4</div>
-      <div class="instruction-text">
-        Aguarde terminar. Quando aparecer
-        <span class="code-inline">Instalação concluída!</span>, feche a janela e continue.
+      <div id="key-error" style="color:#c0392b;font-size:.82rem;margin-top:6px;display:none;">
+        A chave deve começar com <strong>sk-</strong>. Verifique e tente novamente.
       </div>
     </div>
 
     <div class="nav-buttons">
       <button class="btn-back" id="btn-4-back">← Voltar</button>
-      <button class="btn-verita" id="btn-4-next">Instalação concluída, continuar →</button>
+      <button class="btn-verita" id="btn-4-next">Salvar e continuar →</button>
     </div>
   </div>
 

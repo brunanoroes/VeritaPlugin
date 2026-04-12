@@ -79,7 +79,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Etapa 4
     document.getElementById("btn-4-back").addEventListener("click", () => goTo(3));
-    document.getElementById("btn-4-next").addEventListener("click", () => goTo(5));
+    document.getElementById("btn-toggle-key").addEventListener("click", () => {
+        const input = document.getElementById("apiKeyInput");
+        input.type = input.type === "password" ? "text" : "password";
+    });
+    document.getElementById("btn-4-next").addEventListener("click", () => {
+        const key = document.getElementById("apiKeyInput").value.trim();
+        const err = document.getElementById("key-error");
+        if (!key.startsWith("sk-")) {
+            err.style.display = "block";
+            return;
+        }
+        err.style.display = "none";
+        chrome.storage.local.set({ openaiKey: key }, () => goTo(5));
+    });
 
     // Etapa 5
     document.getElementById("btn-5-back").addEventListener("click", () => goTo(4));

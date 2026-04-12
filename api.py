@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()  # carrega o arquivo .env automaticamente
 
+import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -19,6 +20,7 @@ app.add_middleware(
 
 class FacebookContent(BaseModel):
     message: str
+    api_key: str = ""
 
 
 @app.post("/VeritaPlugin/CategorizeData")
@@ -26,8 +28,12 @@ async def categorize(body: FacebookContent):
     if not body.message or not body.message.strip():
         raise HTTPException(status_code=400, detail="Mensagem vazia.")
 
+    chave = body.api_key or os.getenv("OPENAI_API_KEY", "")
+    if not chave:
+        raise HTTPException(status_code=401, detail="Chave da OpenAI não configurada.")
+
     categoria, score = classificar_mensagem(body.message)
-    resultado = analisar_mensagem(body.message, categoria, score)
+    resultado = analisar_mensagem(body.message, categoria, score, api_key=chave)
 
     if resultado.get("Erro"):
         raise HTTPException(status_code=502, detail=resultado["Erro"])

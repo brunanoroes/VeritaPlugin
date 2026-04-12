@@ -1,6 +1,6 @@
 {
   "name": "VeritaPlugin",
-  "description": "Detector de phishing baseado em IA",
+  "description": "Detector de golpes utilizando IA",
   "version": "1.0",
   "manifest_version": 3,
   "permissions": [
@@ -29,7 +29,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["bootstrap.min.css", "setup.html", "setup.js"],
+      "resources": ["bootstrap.min.css", "setup.html", "setup.js", "icon.png"],
       "matches": ["https://*.facebook.com/*", "chrome-extension://*/*"]
     }
   ],
