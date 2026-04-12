@@ -1,19 +1,21 @@
 # VeritaPlugin
 
-Ferramenta de detecção de golpes digitais em redes sociais, desenvolvida como Trabalho de Conclusão de Curso (TCC).
+Extensão do Chrome para detecção de golpes digitais no Facebook, desenvolvida como Trabalho de Conclusão de Curso (TCC).
 
-O sistema combina um modelo **BERTimbau** treinado para classificação de golpes com um **pipeline RAG jurídico** (OpenAI GPT-4o), expondo os resultados via API REST para uma extensão do Chrome.
+O sistema combina um modelo **BERTimbau** treinado para classificação de golpes com um **pipeline RAG jurídico** (OpenAI GPT-4o), expondo os resultados via API REST para a extensão.
 
 ---
 
 ## Como funciona
 
 ```
-Usuário clica em "Analisar Post" no navegador
+Usuário clica em "Analisar Post" no Facebook
         ↓
-Extensão Chrome captura o texto selecionado
+Extensão entra em modo de seleção
         ↓
-POST /VeritaPlugin/CategorizeData { message }
+Usuário clica em uma publicação
+        ↓
+Extensão envia o texto + chave OpenAI para o servidor local
         ↓
 BERTimbau classifica → (categoria, confiança)
         ↓
@@ -24,7 +26,7 @@ API retorna { categoria, risco, explicacao, baseLegal, acaoRecomendada }
 Extensão exibe resultado em modal na página
 ```
 
-> A chave da OpenAI **nunca vai para a extensão**. Ela fica exclusivamente no servidor Python, no arquivo `.env` de cada pessoa.
+> A chave da OpenAI é inserida pelo usuário na tela de configuração da extensão e fica salva apenas no navegador (`chrome.storage.local`). Ela nunca é enviada a terceiros além da própria OpenAI.
 
 ---
 
@@ -44,27 +46,28 @@ Extensão exibe resultado em modal na página
 ## Estrutura do projeto
 
 ```
-ProjetoFinal/
+VeritaPlugin/
 ├── api.py                  # Servidor FastAPI — ponto de entrada
 ├── classificador_bert.py   # Inferência com o modelo BERTimbau
 ├── pipeline_rag.py         # Pipeline RAG + validação de leis + chamada à OpenAI
 ├── base_conhecimento.py    # Base de conhecimento jurídica por categoria
 ├── requirements.txt        # Dependências Python
-├── .env.example            # Modelo do arquivo de configuração (copiar para .env)
-├── modelo_bert/            # Modelo BERTimbau treinado (baixar separadamente — ver abaixo)
+├── iniciar.bat             # Inicia o servidor (instala dependências na 1ª vez)
+├── .env.example            # Modelo do arquivo de configuração (opcional)
+├── modelo_bert/            # Modelo BERTimbau treinado (baixar separadamente)
 └── verita-plugin/          # Extensão Chrome
     ├── manifest.json
     ├── background.js
     ├── content.js
-    ├── selector.js
     ├── popup.html / popup.js / popup.css
-    ├── bootstrap.min.css   # Bootstrap 5 embutido localmente
+    ├── setup.html / setup.js   # Wizard de configuração (abre na 1ª instalação)
+    ├── bootstrap.min.css
     └── icon.png
 ```
 
 ---
 
-## Instalação e execução
+## Instalação
 
 ### Pré-requisitos
 
@@ -83,21 +86,13 @@ cd veritaplugin
 
 ---
 
-### 2. Instalar dependências Python
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-### 3. Baixar o modelo BERTimbau
+### 2. Baixar o modelo BERTimbau
 
 O arquivo `model.safetensors` (~416 MB) não está no repositório por ser muito grande para o GitHub.
 
 **Baixe pelo link abaixo e coloque dentro da pasta `modelo_bert/`:**
 
-> 🔗 [Link para download do modelo](#) ← substituir pelo link real (Google Drive, HuggingFace, etc.)
+> 🔗 [Link para download do modelo](#) ← substituir pelo link real
 
 A pasta deve ficar assim:
 
@@ -112,60 +107,42 @@ modelo_bert/
 
 ---
 
-### 4. Configurar a chave OpenAI
+### 3. Iniciar o servidor
 
-Copie o arquivo `.env.example` e renomeie para `.env`:
+Dê dois cliques em **`iniciar.bat`**.
 
-```bash
-# Linux / Mac
-cp .env.example .env
+Na primeira execução ele irá:
+- Verificar se o Python está instalado
+- Instalar todas as dependências automaticamente
+- Subir o servidor em `http://localhost:8080`
 
-# Windows CMD
-copy .env.example .env
-```
-
-Abra o `.env` e cole sua chave:
-
-```
-OPENAI_API_KEY=cole_sua_chave_aqui
-```
-
-> O arquivo `.env` **não é enviado ao GitHub** (está no `.gitignore`). Cada pessoa usa a própria chave.
+> Mantenha a janela aberta enquanto usa o plugin.
 
 ---
 
-### 5. Iniciar o servidor
-
-```bash
-python api.py
-```
-
-O servidor sobe em `http://localhost:8080`.
-Documentação interativa disponível em `http://localhost:8080/docs`.
-
----
-
-### 6. Instalar a extensão no Chrome
+### 4. Instalar a extensão no Chrome
 
 1. Abra o Chrome e acesse `chrome://extensions/`
 2. Ative o **Modo do desenvolvedor** (canto superior direito)
 3. Clique em **Carregar sem compactação**
 4. Selecione a pasta `verita-plugin/`
 
-O botão **"Analisar Post"** aparecerá em qualquer página do navegador.
+Ao instalar pela primeira vez, o **wizard de configuração** abrirá automaticamente guiando o usuário por todas as etapas, incluindo a inserção da chave da OpenAI.
 
 ---
 
 ## Usando a extensão
 
-1. Com o servidor rodando (`python api.py`), abra qualquer página
-2. Clique no botão flutuante **"Analisar Post"**
-3. Clique em qualquer elemento da página com texto suspeito
+1. Com o servidor rodando (`iniciar.bat`), abra o **Facebook**
+2. Clique no botão flutuante **"Analisar Post"** no canto inferior direito
+3. Clique em qualquer publicação com texto suspeito
 4. O resultado aparece em um modal com:
-   - **SEGURO** (verde) ou **ATENÇÃO** (laranja) com a categoria detectada
-   - Explicação do modelo
+   - ✅ **SEGURO** (verde) ou ⚠️ **ATENÇÃO** (laranja) com a categoria detectada
+   - Explicação da análise
    - Base legal aplicável
    - Ações recomendadas
+
+> Para cancelar o modo de seleção, clique em **"Sair da seleção"** ou pressione **ESC**.
 
 ---
 
@@ -175,7 +152,10 @@ O botão **"Analisar Post"** aparecerá em qualquer página do navegador.
 
 **Request:**
 ```json
-{ "message": "Parabéns! Você ganhou R$5.000. Clique aqui para resgatar." }
+{
+  "message": "Parabéns! Você ganhou R$5.000. Clique aqui para resgatar.",
+  "api_key": "sk-..."
+}
 ```
 
 **Response:**
@@ -201,8 +181,8 @@ O botão **"Analisar Post"** aparecerá em qualquer página do navegador.
 
 | Problema | Solução |
 |---|---|
-| Botão não aparece na página | Recarregue a extensão em `chrome://extensions/` |
-| Modal sem estilo (sem CSS) | Verifique se `bootstrap.min.css` está na pasta `verita-plugin/` |
-| Erro 502 na análise | Verifique se a chave no `.env` está correta e tem crédito na OpenAI |
-| Servidor não inicia | Confirme que o modelo está em `modelo_bert/model.safetensors` |
-| Plugin não conecta ao servidor | Confirme que `python api.py` está rodando e use `http://localhost:8080/docs` para testar |
+| Botão não aparece no Facebook | Recarregue a extensão em `chrome://extensions/` |
+| "Failed to fetch" ao analisar | Verifique se o `iniciar.bat` está aberto e rodando |
+| Erro ao analisar | Confirme que sua chave OpenAI tem crédito disponível |
+| Servidor não inicia | Confirme que o Python está instalado e no PATH |
+| Modelo não encontrado | Coloque o `model.safetensors` dentro da pasta `modelo_bert/` |
