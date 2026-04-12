@@ -92,7 +92,7 @@ O arquivo `model.safetensors` (~416 MB) não está no repositório por ser muito
 
 **Baixe pelo link abaixo e coloque dentro da pasta `modelo_bert/`:**
 
-> 🔗 [Link para download do modelo](#) ← substituir pelo link real
+> 🔗 [Link para download do modelo](https://huggingface.co/brunanoroes/veritaplugin-bert/tree/main) ← substituir pelo link real
 
 A pasta deve ficar assim:
 
