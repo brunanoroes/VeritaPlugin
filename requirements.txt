@@ -1,11 +1,12 @@
 fastapi
 uvicorn
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.2.2+cpu
-transformers
+torch==2.4.0+cpu
+transformers==4.44.2
 safetensors
 openai
 pandas
 openpyxl
 python-dotenv
 huggingface_hub
+numpy<2
