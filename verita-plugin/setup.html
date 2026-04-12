@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>VeritaPlugin – Configuração</title>
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <style>
+    body {
+      background: #f0f2f5;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .wizard-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      max-width: 620px;
+      width: 100%;
+      padding: 40px 40px 32px;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1877F2;
+      margin-bottom: 4px;
+    }
+
+    .logo span { color: #333; }
+
+    .steps-bar {
+      display: flex;
+      align-items: center;
+      margin: 24px 0 32px;
+    }
+
+    .step-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #e4e6ea;
+      color: #888;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all .3s;
+    }
+
+    .step-dot.active { background: #1877F2; color: #fff; }
+    .step-dot.done   { background: #42b883; color: #fff; }
+
+    .step-line {
+      flex: 1;
+      height: 3px;
+      background: #e4e6ea;
+      transition: background .3s;
+    }
+
+    .step-line.done { background: #42b883; }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .step-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1c1e21;
+      margin-bottom: 8px;
+    }
+
+    .step-desc {
+      color: #555;
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    .terms-box {
+      background: #f7f8fa;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      height: 220px;
+      overflow-y: auto;
+      font-size: 0.85rem;
+      color: #444;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .instruction {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: #f7f8fa;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .instruction-num {
+      background: #1877F2;
+      color: #fff;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .instruction-text { font-size: 0.9rem; color: #333; line-height: 1.5; }
+    .instruction-text strong { color: #1c1e21; }
+
+    .code-inline {
+      background: #e8eaf0;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: #333;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-top: 16px;
+    }
+
+    .status-badge.ok      { background: #e6f4ea; color: #2d7a3a; }
+    .status-badge.erro    { background: #fdecea; color: #c0392b; }
+    .status-badge.waiting { background: #e8f0fe; color: #1877F2; }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 28px;
+    }
+
+    .btn-verita {
+      background: #1877F2;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 28px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-verita:hover { background: #1558c0; color: #fff; }
+    .btn-verita:disabled { background: #a0b4d6; cursor: not-allowed; }
+    .btn-verita.gray { background: #6c757d; }
+    .btn-verita.gray:hover { background: #565e64; }
+
+    .btn-back {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 10px 0;
+    }
+
+    .btn-back:hover { color: #333; }
+
+    .final-icon { font-size: 3.5rem; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+<div class="wizard-card">
+
+  <div class="logo">🛡️ Verita<span>Plugin</span></div>
+  <div style="color:#888;font-size:.85rem;margin-bottom:4px;">Detector de phishing com IA</div>
+
+  <div class="steps-bar">
+    <div class="step-dot active" id="dot-1">1</div>
+    <div class="step-line" id="line-1"></div>
+    <div class="step-dot" id="dot-2">2</div>
+    <div class="step-line" id="line-2"></div>
+    <div class="step-dot" id="dot-3">3</div>
+    <div class="step-line" id="line-3"></div>
+    <div class="step-dot" id="dot-4">4</div>
+    <div class="step-line" id="line-4"></div>
+    <div class="step-dot" id="dot-5">5</div>
+  </div>
+
+  <!-- ETAPA 1 -->
+  <div class="step active" id="step-1">
+    <div class="step-title">Bem-vindo ao VeritaPlugin!</div>
+    <div class="step-desc">
+      O VeritaPlugin analisa publicações do Facebook e identifica possíveis golpes,
+      phishing e desinformação usando inteligência artificial.<br><br>
+      Este assistente vai te guiar para configurar tudo em poucos minutos.
+      Não é necessário conhecimento técnico.
+    </div>
+    <div class="instruction">
+      <div class="instruction-num">?</div>
+      <div class="instruction-text">
+        <strong>Como funciona?</strong><br>
+        Após a configuração, um botão azul aparecerá no canto da tela ao abrir o Facebook.
+        Clique nele, selecione qualquer publicação e receba uma análise instantânea.
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <span></span>
+      <button class="btn-verita" id="btn-1-next">Começar configuração →</button>
+    </div>
+  </div>
+
+  <!-- ETAPA 2 -->
+  <div class="step" id="step-2">
+    <div class="step-title">Termos de Uso</div>
+    <div class="step-desc">Leia e aceite os termos antes de continuar.</div>
+
+    <div class="terms-box">
+      <strong>Termos de Uso – VeritaPlugin</strong><br><br>
+
+      <strong>1. Natureza da ferramenta</strong><br>
+      O VeritaPlugin é uma extensão experimental desenvolvida para fins acadêmicos,
+      como parte de um Trabalho de Conclusão de Curso (TCC). Ele utiliza modelos de
+      inteligência artificial para auxiliar na identificação de possíveis conteúdos
+      fraudulentos ou enganosos no Facebook.<br><br>
+
+      <strong>2. Limitação de responsabilidade</strong><br>
+      As análises geradas são baseadas em modelos de linguagem e podem conter erros.
+      O VeritaPlugin não substitui o julgamento humano, consulta jurídica ou parecer
+      de especialistas em segurança digital. O usuário é o único responsável pelas
+      decisões tomadas com base nas informações fornecidas pela ferramenta.<br><br>
+
+      <strong>3. Privacidade e dados</strong><br>
+      Os textos analisados são enviados à API da OpenAI para processamento. Não
+      armazenamos nenhum dado pessoal do usuário. A chave de API fornecida fica
+      salva apenas localmente no seu computador e nunca é transmitida a terceiros
+      além da própria OpenAI.<br><br>
+
+      <strong>4. Uso aceitável</strong><br>
+      O uso desta ferramenta é permitido exclusivamente para fins legítimos de
+      verificação de conteúdo. É proibido utilizá-la para monitorar, rastrear ou
+      coletar dados de terceiros sem consentimento.<br><br>
+
+      <strong>5. Código aberto e sem garantias</strong><br>
+      O VeritaPlugin é distribuído sem garantias de qualquer tipo. O código-fonte
+      está disponível para fins acadêmicos e de transparência.
+    </div>
+
+    <div class="form-check mb-2">
+      <input class="form-check-input" type="checkbox" id="acceptTerms">
+      <label class="form-check-label" for="acceptTerms" style="font-size:.9rem;">
+        Li e aceito os Termos de Uso
+      </label>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" id="btn-2-back">← Voltar</button>
+      <button class="btn-verita" id="btn-accept" disabled>Aceitar e continuar →</button>
+    </div>
+  </div>
+
+  <!-- ETAPA 3 -->
+  <div class="step" id="step-3">
+    <div class="step-title">Instalar o Python</div>
+    <div class="step-desc">
+      O VeritaPlugin precisa do Python instalado no seu computador para funcionar.
+      Se você já tem o Python instalado, pode pular esta etapa.
+    </div>
+
+    <div class="instruction">
+      <div class="instruction-num">1</div>
+      <div class="instruction-text">
+        <strong>Baixe o Python</strong> clicando no botão abaixo. Acesse o site oficial
+        e baixe a versão mais recente para Windows.
+      </div>
+    </div>
+    <div class="instruction">
+      <div class="instruction-num">2</div>
+      <div class="instruction-text">
+        <strong>Durante a instalação</strong>, marque obrigatoriamente a opção:<br>
+        <span class="code-inline">☑ Add Python to PATH</span><br>
+        Essa opção geralmente aparece na primeira tela do instalador.
+      </div>
+    </div>
+    <div class="instruction">
+      <div class="instruction-num">3</div>
+      <div class="instruction-text">
+        Conclua a instalação normalmente e volte aqui.
+      </div>
+    </div>
+
+    <a href="https://www.python.org/downloads/" target="_blank" class="btn-verita" style="font-size:.9rem;margin-top:8px;">
+      Baixar Python →
+    </a>
+
+    <div class="nav-buttons">
+      <button class="btn-back" id="btn-3-back">← Voltar</button>
+      <button class="btn-verita" id="btn-3-next">Python instalado, continuar →</button>
+    </div>
+  </div>
+
+  <!-- ETAPA 4 -->
+  <div class="step" id="step-4">
+    <div class="step-title">Configurar o servidor</div>
+    <div class="step-desc">
+      Agora vamos instalar as dependências e configurar sua chave da OpenAI.
+      Siga os passos abaixo com atenção.
+    </div>
+
+    <div class="instruction">
+      <div class="instruction-num">1</div>
+      <div class="instruction-text">
+        Abra a pasta onde você salvou o VeritaPlugin no seu computador.
+      </div>
+    </div>
+    <div class="instruction">
+      <div class="instruction-num">2</div>
+      <div class="instruction-text">
+        Dê dois cliques no arquivo <span class="code-inline">instalar.bat</span>.<br>
+        Uma janela preta vai abrir e instalar tudo automaticamente.
+      </div>
+    </div>
+    <div class="instruction">
+      <div class="instruction-num">3</div>
+      <div class="instruction-text">
+        Quando solicitado, cole sua chave da OpenAI
+        (começa com <span class="code-inline">sk-...</span>).<br>
+        Você pode criar uma chave em
+        <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a>.
+      </div>
+    </div>
+    <div class="instruction">
+      <div class="instruction-num">4</div>
+      <div class="instruction-text">
+        Aguarde terminar. Quando aparecer
+        <span class="code-inline">Instalação concluída!</span>, feche a janela e continue.
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" id="btn-4-back">← Voltar</button>
+      <button class="btn-verita" id="btn-4-next">Instalação concluída, continuar →</button>
+    </div>
+  </div>
+
+  <!-- ETAPA 5 -->
+  <div class="step" id="step-5">
+    <div class="step-title">Iniciar e verificar o servidor</div>
+    <div class="step-desc">Última etapa! Inicie o servidor e verifique se está tudo funcionando.</div>
+
+    <div class="instruction">
+      <div class="instruction-num">1</div>
+      <div class="instruction-text">
+        Abra a pasta do VeritaPlugin e dê dois cliques em
+        <span class="code-inline">iniciar.bat</span>.<br>
+        Mantenha essa janela aberta enquanto usa o plugin.
+      </div>
+    </div>
+    <div class="instruction">
+      <div class="instruction-num">2</div>
+      <div class="instruction-text">
+        Quando a janela mostrar <span class="code-inline">Uvicorn running on http://0.0.0.0:8080</span>,
+        clique em <strong>Verificar conexão</strong> abaixo.
+      </div>
+    </div>
+
+    <div class="status-badge waiting" id="status-badge">
+      <span>⏳</span> Aguardando verificação...
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" id="btn-5-back">← Voltar</button>
+      <div style="display:flex;gap:10px;">
+        <button class="btn-verita gray" id="btn-check">Verificar conexão</button>
+        <button class="btn-verita" id="btn-finish" disabled>Concluir →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA FINAL -->
+  <div class="step" id="step-done">
+    <div class="text-center py-2">
+      <div class="final-icon">🎉</div>
+      <div class="step-title">Tudo pronto!</div>
+      <div class="step-desc">
+        O VeritaPlugin está configurado e funcionando.<br><br>
+        Acesse o <strong>Facebook</strong> e procure o botão azul
+        <strong>"Analisar Post"</strong> no canto inferior direito da tela.<br><br>
+        Clique nele e selecione qualquer publicação para analisar.
+      </div>
+      <button class="btn-verita" id="btn-open-fb">Abrir o Facebook →</button>
+    </div>
+  </div>
+
+</div>
+<script src="setup.js"></script>
+</body>
+</html>

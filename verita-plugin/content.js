@@ -16,6 +16,7 @@ function injectBootstrap() {
 
 function injectFloatingButton() {
     if (document.getElementById("veritaplugin-floating-btn")) return;
+    injectBootstrap();
 
     const btn = document.createElement("button");
     btn.id        = "veritaplugin-floating-btn";
@@ -59,7 +60,10 @@ function startSelectionMode() {
             { action: "analisarTexto", message: e.target.innerText || "" },
             (response) => {
                 hideLoadingOverlay();
-                if (!response) { alert("Erro: sem resposta."); return; }
+                if (!response || !response.success) {
+                    alert("Erro ao analisar: " + (response?.error || "Sem resposta do servidor."));
+                    return;
+                }
                 showVeritaPluginResult(response.result);
             }
         );

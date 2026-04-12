@@ -5,10 +5,13 @@
   "manifest_version": 3,
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "storage",
+    "tabs"
   ],
   "host_permissions": [
-    "http://localhost:8080/*"
+    "http://localhost:8080/*",
+    "https://*.facebook.com/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -16,7 +19,7 @@
   "content_scripts": [
     {
       "matches": [
-        "<all_urls>"
+        "https://*.facebook.com/*"
       ],
       "js": [
         "content.js"
@@ -26,8 +29,8 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["bootstrap.min.css"],
-      "matches": ["<all_urls>"]
+      "resources": ["bootstrap.min.css", "setup.html", "setup.js"],
+      "matches": ["https://*.facebook.com/*", "chrome-extension://*/*"]
     }
   ],
   "icons": {
