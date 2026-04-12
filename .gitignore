@@ -1,13 +1,13 @@
 # Modelo BERT (arquivo muito grande para o GitHub - 416MB)
 modelo_bert/model.safetensors
 
-# Variáveis de ambiente e segredos
+# Variáveis de ambiente
 .env
 
 # Controle de instalação local
 .instalado
 
-# Datasets e resultados (arquivos pesados)
+# Datasets e resultados
 *.xlsx
 backup_rag_*.xlsx
 

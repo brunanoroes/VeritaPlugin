@@ -283,118 +283,107 @@
 
   <!-- ETAPA 3 -->
   <div class="step" id="step-3">
-    <div class="step-title">Instalar o Python</div>
+    <div class="step-title">Configurar o servidor</div>
     <div class="step-desc">
-      O VeritaPlugin precisa do Python instalado no seu computador para funcionar.
-      Se você já tem o Python instalado, pode pular esta etapa.
+      O VeritaPlugin precisa de um servidor rodando no seu computador. Vamos verificar se está tudo certo.
     </div>
 
-    <div class="instruction">
-      <div class="instruction-num">1</div>
-      <div class="instruction-text">
-        <strong>Baixe o Python</strong> clicando no botão abaixo. Acesse o site oficial
-        e baixe a versão mais recente para Windows.
-      </div>
-    </div>
-    <div class="instruction">
-      <div class="instruction-num">2</div>
-      <div class="instruction-text">
-        <strong>Durante a instalação</strong>, marque obrigatoriamente a opção:<br>
-        <span class="code-inline">☑ Add Python to PATH</span><br>
-        Essa opção geralmente aparece na primeira tela do instalador.
-      </div>
-    </div>
-    <div class="instruction">
-      <div class="instruction-num">3</div>
-      <div class="instruction-text">
-        Conclua a instalação normalmente e volte aqui.
+    <!-- Status de detecção automática -->
+    <div id="detect-area" style="margin-bottom:16px;">
+      <div class="status-badge waiting" id="detect-badge" style="width:100%;box-sizing:border-box;">
+        <span>⏳</span> Verificando se o servidor já está rodando...
       </div>
     </div>
 
-    <a href="https://www.python.org/downloads/" target="_blank" class="btn-verita" style="font-size:.9rem;margin-top:8px;">
-      Baixar Python →
-    </a>
+    <!-- Instruções (mostradas só se necessário) -->
+    <div id="install-instructions" style="display:none;">
+      <div class="instruction">
+        <div class="instruction-num">1</div>
+        <div class="instruction-text">
+          <strong>Abra a pasta</strong> onde você salvou o VeritaPlugin e dê dois cliques em
+          <span class="code-inline">iniciar.bat</span>.<br>
+          Na primeira vez, ele instala tudo automaticamente.
+        </div>
+      </div>
+      <div class="instruction">
+        <div class="instruction-num">2</div>
+        <div class="instruction-text">
+          Mantenha a janela preta aberta enquanto usa o plugin.<br>
+          Quando aparecer <span class="code-inline">Uvicorn running on http://0.0.0.0:8080</span>,
+          clique em <strong>Verificar novamente</strong> abaixo.
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:4px;flex-wrap:wrap;">
+        <button class="btn-verita gray" id="btn-3-recheck">🔄 Verificar novamente</button>
+        <button class="btn-verita" id="btn-3-python" style="background:#e53935;">Estou com problema →</button>
+      </div>
+    </div>
 
     <div class="nav-buttons">
       <button class="btn-back" id="btn-3-back">← Voltar</button>
-      <button class="btn-verita" id="btn-3-next">Python instalado, continuar →</button>
+      <button class="btn-verita" id="btn-3-next" disabled>Continuar →</button>
     </div>
   </div>
 
-  <!-- ETAPA 4 -->
+  <!-- ETAPA 4 (erro técnico) -->
   <div class="step" id="step-4">
-    <div class="step-title">Sua chave da OpenAI</div>
+    <div class="step-title">Problema ao iniciar 😕</div>
     <div class="step-desc">
-      O VeritaPlugin usa a IA da OpenAI para analisar publicações.
-      Insira sua chave abaixo — ela fica salva só no seu navegador e nunca é compartilhada.
+      O VeritaPlugin não conseguiu iniciar. Isso pode ter acontecido porque a ferramenta não foi baixada corretamente.
     </div>
 
     <div class="instruction">
       <div class="instruction-num">1</div>
       <div class="instruction-text">
-        Acesse <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a>,
-        faça login e clique em <strong>"Create new secret key"</strong>.
+        Certifique-se de que você baixou o <strong>arquivo ZIP completo</strong> do VeritaPlugin
+        e extraiu todos os arquivos antes de abrir o <span class="code-inline">iniciar.bat</span>.
       </div>
     </div>
     <div class="instruction">
       <div class="instruction-num">2</div>
       <div class="instruction-text">
-        Copie a chave gerada (começa com <span class="code-inline">sk-...</span>)
-        e cole no campo abaixo.
-      </div>
-    </div>
-
-    <div style="margin-top:16px;">
-      <label style="font-size:.9rem;font-weight:600;color:#333;display:block;margin-bottom:6px;">
-        Chave da OpenAI
-      </label>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <input type="password" id="apiKeyInput" placeholder="sk-..."
-          style="flex:1;padding:10px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:.9rem;font-family:monospace;outline:none;">
-        <button id="btn-toggle-key" style="background:none;border:1.5px solid #ddd;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:1rem;" title="Mostrar/ocultar">👁</button>
-      </div>
-      <div id="key-error" style="color:#c0392b;font-size:.82rem;margin-top:6px;display:none;">
-        A chave deve começar com <strong>sk-</strong>. Verifique e tente novamente.
+        Tente abrir o <span class="code-inline">iniciar.bat</span> novamente.
+        Se o problema persistir, entre em contato com o suporte.
       </div>
     </div>
 
     <div class="nav-buttons">
-      <button class="btn-back" id="btn-4-back">← Voltar</button>
-      <button class="btn-verita" id="btn-4-next">Salvar e continuar →</button>
+      <button class="btn-back" id="btn-4-back">← Voltar e tentar novamente</button>
+      <span></span>
     </div>
   </div>
 
   <!-- ETAPA 5 -->
   <div class="step" id="step-5">
-    <div class="step-title">Iniciar e verificar o servidor</div>
-    <div class="step-desc">Última etapa! Inicie o servidor e verifique se está tudo funcionando.</div>
-
-    <div class="instruction">
-      <div class="instruction-num">1</div>
-      <div class="instruction-text">
-        Abra a pasta do VeritaPlugin e dê dois cliques em
-        <span class="code-inline">iniciar.bat</span>.<br>
-        Mantenha essa janela aberta enquanto usa o plugin.
-      </div>
-    </div>
-    <div class="instruction">
-      <div class="instruction-num">2</div>
-      <div class="instruction-text">
-        Quando a janela mostrar <span class="code-inline">Uvicorn running on http://0.0.0.0:8080</span>,
-        clique em <strong>Verificar conexão</strong> abaixo.
-      </div>
+    <div class="step-title">Quase lá! 🎯</div>
+    <div class="step-desc">
+      Confirme sua chave da OpenAI e estaremos prontos.
     </div>
 
-    <div class="status-badge waiting" id="status-badge">
-      <span>⏳</span> Aguardando verificação...
+    <div class="status-badge ok" id="status-badge" style="width:100%;box-sizing:border-box;margin-bottom:16px;">
+      <span>✓</span> Servidor conectado e funcionando!
+    </div>
+
+    <div style="margin-top:4px;">
+      <label style="font-size:.9rem;font-weight:600;color:#333;display:block;margin-bottom:6px;">
+        Chave da OpenAI
+      </label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="password" id="apiKeyInput2" placeholder="sk-..."
+          style="flex:1;padding:10px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:.9rem;font-family:monospace;outline:none;">
+        <button id="btn-toggle-key2" style="background:none;border:1.5px solid #ddd;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:1rem;" title="Mostrar/ocultar">👁</button>
+      </div>
+      <div id="key-error2" style="color:#c0392b;font-size:.82rem;margin-top:6px;display:none;">
+        A chave deve começar com <strong>sk-</strong>. Verifique e tente novamente.
+      </div>
+      <div style="font-size:0.8rem;color:#888;margin-top:6px;">
+        Obtenha sua chave em <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a>
+      </div>
     </div>
 
     <div class="nav-buttons">
       <button class="btn-back" id="btn-5-back">← Voltar</button>
-      <div style="display:flex;gap:10px;">
-        <button class="btn-verita gray" id="btn-check">Verificar conexão</button>
-        <button class="btn-verita" id="btn-finish" disabled>Concluir →</button>
-      </div>
+      <button class="btn-verita" id="btn-finish">Concluir →</button>
     </div>
   </div>
 

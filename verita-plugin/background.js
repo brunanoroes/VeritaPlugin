@@ -4,10 +4,13 @@ chrome.runtime.onInstalled.addListener((details) => {
     }
 });
 
+// URL da API — troque pelo endereço do Railway após o deploy
+const API_URL = "https://SEU-PROJETO.up.railway.app";
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "analisarTexto") {
         chrome.storage.local.get("openaiKey", ({ openaiKey }) => {
-            fetch("http://localhost:8080/VeritaPlugin/CategorizeData", {
+            fetch(`${API_URL}/VeritaPlugin/CategorizeData`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message: request.message, api_key: openaiKey || "" })
