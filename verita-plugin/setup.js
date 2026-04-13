@@ -45,7 +45,7 @@ async function autoDetectServer() {
     btnNext.disabled = true;
 
     try {
-        const res = await fetch("http://localhost:8080/VeritaPlugin/health", {
+        const res = await fetch("https://veritaplugin-production.up.railway.app/VeritaPlugin/health", {
             signal: AbortSignal.timeout(4000)
         });
         if (res.ok) {

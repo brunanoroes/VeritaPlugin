@@ -283,39 +283,25 @@
 
   <!-- ETAPA 3 -->
   <div class="step" id="step-3">
-    <div class="step-title">Configurar o servidor</div>
+    <div class="step-title">Verificando conexão...</div>
     <div class="step-desc">
-      O VeritaPlugin precisa de um servidor rodando no seu computador. Vamos verificar se está tudo certo.
+      Aguarde enquanto verificamos se o serviço está disponível.
     </div>
 
-    <!-- Status de detecção automática -->
-    <div id="detect-area" style="margin-bottom:16px;">
-      <div class="status-badge waiting" id="detect-badge" style="width:100%;box-sizing:border-box;">
-        <span>⏳</span> Verificando se o servidor já está rodando...
-      </div>
+    <div id="detect-badge" class="status-badge waiting" style="width:100%;box-sizing:border-box;margin-bottom:16px;">
+      <span>⏳</span> Conectando ao servidor...
     </div>
 
-    <!-- Instruções (mostradas só se necessário) -->
     <div id="install-instructions" style="display:none;">
       <div class="instruction">
-        <div class="instruction-num">1</div>
+        <div class="instruction-num">!</div>
         <div class="instruction-text">
-          <strong>Abra a pasta</strong> onde você salvou o VeritaPlugin e dê dois cliques em
-          <span class="code-inline">iniciar.bat</span>.<br>
-          Na primeira vez, ele instala tudo automaticamente.
+          Não foi possível conectar ao servidor. Verifique sua conexão com a internet e tente novamente.
         </div>
       </div>
-      <div class="instruction">
-        <div class="instruction-num">2</div>
-        <div class="instruction-text">
-          Mantenha a janela preta aberta enquanto usa o plugin.<br>
-          Quando aparecer <span class="code-inline">Uvicorn running on http://0.0.0.0:8080</span>,
-          clique em <strong>Verificar novamente</strong> abaixo.
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;margin-top:4px;flex-wrap:wrap;">
-        <button class="btn-verita gray" id="btn-3-recheck">🔄 Verificar novamente</button>
-        <button class="btn-verita" id="btn-3-python" style="background:#e53935;">Estou com problema →</button>
+      <div style="margin-top:8px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn-verita gray" id="btn-3-recheck">🔄 Tentar novamente</button>
+        <button class="btn-verita" id="btn-3-python" style="background:#e53935;">Continuar mesmo assim →</button>
       </div>
     </div>
 
@@ -327,22 +313,20 @@
 
   <!-- ETAPA 4 (erro técnico) -->
   <div class="step" id="step-4">
-    <div class="step-title">Problema ao iniciar 😕</div>
+    <div class="step-title">Problema de conexão 😕</div>
     <div class="step-desc">
-      O VeritaPlugin não conseguiu iniciar. Isso pode ter acontecido porque a ferramenta não foi baixada corretamente.
+      Não conseguimos conectar ao servidor do VeritaPlugin.
     </div>
 
     <div class="instruction">
       <div class="instruction-num">1</div>
       <div class="instruction-text">
-        Certifique-se de que você baixou o <strong>arquivo ZIP completo</strong> do VeritaPlugin
-        e extraiu todos os arquivos antes de abrir o <span class="code-inline">iniciar.bat</span>.
+        Verifique se você está conectado à internet.
       </div>
     </div>
     <div class="instruction">
       <div class="instruction-num">2</div>
       <div class="instruction-text">
-        Tente abrir o <span class="code-inline">iniciar.bat</span> novamente.
         Se o problema persistir, entre em contato com o suporte.
       </div>
     </div>
