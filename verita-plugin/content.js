@@ -280,6 +280,11 @@ function showVeritaPluginResult(data) {
                     </div>
                 </div>
 
+                <!-- Aviso -->
+                <div style="font-size:0.78rem;color:#888;text-align:center;margin-bottom:10px;">
+                    O VeritaPlugin pode cometer erros. Confira informações importantes.
+                </div>
+
                 <!-- Botão fechar -->
                 <button id="veritaplugin-close-btn" class="btn btn-primary w-100">
                     Fechar
