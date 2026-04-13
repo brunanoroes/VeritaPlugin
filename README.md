@@ -2,7 +2,7 @@
 
 Extensão do Chrome para detecção de golpes digitais no Facebook, desenvolvida como Trabalho de Conclusão de Curso (TCC).
 
-O sistema combina um modelo **BERTimbau** treinado para classificação de golpes com um **pipeline RAG jurídico** (OpenAI GPT-4o), expondo os resultados via API REST para a extensão.
+O sistema combina um modelo **BERTimbau** treinado para classificação de golpes com um **pipeline RAG jurídico** (OpenAI GPT-4o), expondo os resultados via API REST hospedada no Railway para uma extensão do Chrome.
 
 ---
 
@@ -15,7 +15,7 @@ Extensão entra em modo de seleção
         ↓
 Usuário clica em uma publicação
         ↓
-Extensão envia o texto + chave OpenAI para o servidor local
+Extensão envia o texto + chave OpenAI para a API no Railway
         ↓
 BERTimbau classifica → (categoria, confiança)
         ↓
@@ -26,7 +26,7 @@ API retorna { categoria, risco, explicacao, baseLegal, acaoRecomendada }
 Extensão exibe resultado em modal na página
 ```
 
-> A chave da OpenAI é inserida pelo usuário na tela de configuração da extensão e fica salva apenas no navegador (`chrome.storage.local`). Ela nunca é enviada a terceiros além da própria OpenAI.
+> A chave da OpenAI é inserida pelo usuário na tela de configuração da extensão e fica salva apenas no navegador (`chrome.storage.local`). Ela nunca é armazenada no servidor.
 
 ---
 
@@ -51,102 +51,34 @@ VeritaPlugin/
 ├── classificador_bert.py   # Inferência com o modelo BERTimbau
 ├── pipeline_rag.py         # Pipeline RAG + validação de leis + chamada à OpenAI
 ├── base_conhecimento.py    # Base de conhecimento jurídica por categoria
+├── download_model.py       # Baixa o modelo do HuggingFace no deploy
 ├── requirements.txt        # Dependências Python
-├── iniciar.bat             # Inicia o servidor (instala dependências na 1ª vez)
-├── .env.example            # Modelo do arquivo de configuração (opcional)
-├── modelo_bert/            # Modelo BERTimbau treinado (baixar separadamente)
+├── railway.toml            # Configuração do deploy no Railway
+├── modelo_bert/            # Arquivos do modelo (model.safetensors no HuggingFace)
 └── verita-plugin/          # Extensão Chrome
     ├── manifest.json
     ├── background.js
     ├── content.js
-    ├── popup.html / popup.js / popup.css
-    ├── setup.html / setup.js   # Wizard de configuração (abre na 1ª instalação)
+    ├── setup.html / setup.js   # Wizard de configuração
     ├── bootstrap.min.css
     └── icon.png
 ```
 
 ---
 
-## Instalação
+## Modelo BERTimbau
 
-### Pré-requisitos
+O modelo treinado está hospedado no HuggingFace e é baixado automaticamente no deploy:
 
-- Python 3.10+
-- Google Chrome
-- Chave de API da OpenAI → [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
-
----
-
-### 1. Clonar o repositório
-
-```bash
-git clone https://github.com/seu-usuario/veritaplugin.git
-cd veritaplugin
-```
-
----
-
-### 2. Baixar o modelo BERTimbau
-
-O arquivo `model.safetensors` (~416 MB) não está no repositório por ser muito grande para o GitHub.
-
-**Baixe pelo link abaixo e coloque dentro da pasta `modelo_bert/`:**
-
-> 🔗 [Link para download do modelo](https://huggingface.co/brunanoroes/veritaplugin-bert/tree/main) ← substituir pelo link real
-
-A pasta deve ficar assim:
-
-```
-modelo_bert/
-├── config.json
-├── model.safetensors   ← baixar e colocar aqui
-├── tokenizer.json
-├── tokenizer_config.json
-└── training_args.bin
-```
-
----
-
-### 3. Iniciar o servidor
-
-Dê dois cliques em **`iniciar.bat`**.
-
-Na primeira execução ele irá:
-- Verificar se o Python está instalado
-- Instalar todas as dependências automaticamente
-- Subir o servidor em `http://localhost:8080`
-
-> Mantenha a janela aberta enquanto usa o plugin.
-
----
-
-### 4. Instalar a extensão no Chrome
-
-1. Abra o Chrome e acesse `chrome://extensions/`
-2. Ative o **Modo do desenvolvedor** (canto superior direito)
-3. Clique em **Carregar sem compactação**
-4. Selecione a pasta `verita-plugin/`
-
-Ao instalar pela primeira vez, o **wizard de configuração** abrirá automaticamente guiando o usuário por todas as etapas, incluindo a inserção da chave da OpenAI.
-
----
-
-## Usando a extensão
-
-1. Com o servidor rodando (`iniciar.bat`), abra o **Facebook**
-2. Clique no botão flutuante **"Analisar Post"** no canto inferior direito
-3. Clique em qualquer publicação com texto suspeito
-4. O resultado aparece em um modal com:
-   - ✅ **SEGURO** (verde) ou ⚠️ **ATENÇÃO** (laranja) com a categoria detectada
-   - Explicação da análise
-   - Base legal aplicável
-   - Ações recomendadas
-
-> Para cancelar o modo de seleção, clique em **"Sair da seleção"** ou pressione **ESC**.
+🤗 [brunanoroes/veritaplugin-bert](https://huggingface.co/brunanoroes/veritaplugin-bert)
 
 ---
 
 ## API
+
+A API está hospedada no Railway:
+
+🌐 `https://veritaplugin-production.up.railway.app`
 
 ### `POST /VeritaPlugin/CategorizeData`
 
@@ -177,12 +109,59 @@ Ao instalar pela primeira vez, o **wizard de configuração** abrirá automatica
 
 ---
 
+## Instalação da extensão
+
+### Pré-requisitos
+
+- Google Chrome
+- Chave de API da OpenAI → [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+
+### Passos
+
+1. Baixe ou clone este repositório
+2. Abra o Chrome e acesse `chrome://extensions/`
+3. Ative o **Modo do desenvolvedor** (canto superior direito)
+4. Clique em **Carregar sem compactação**
+5. Selecione a pasta `verita-plugin/`
+
+Ao instalar pela primeira vez, o **wizard de configuração** abrirá automaticamente com instruções para inserir sua chave da OpenAI.
+
+---
+
+## Usando a extensão
+
+1. Abra o **Facebook**
+2. Clique no botão flutuante **"Analisar Post"** no canto inferior direito
+3. Clique em qualquer publicação com texto suspeito
+4. O resultado aparece em um modal com:
+   - ✅ **SEGURO** (verde) ou ⚠️ **ATENÇÃO** (laranja) com a categoria detectada
+   - Explicação da análise
+   - Base legal aplicável
+   - Ações recomendadas
+
+> Para cancelar o modo de seleção, clique em **"Sair da seleção"** ou pressione **ESC**.
+
+---
+
+## Deploy (Railway)
+
+O deploy é feito automaticamente via GitHub. A cada push na branch `main`, o Railway rebuilda e sobe a API.
+
+O modelo é baixado do HuggingFace automaticamente na inicialização via `download_model.py`.
+
+### Variáveis de ambiente no Railway
+
+| Variável | Descrição |
+|---|---|
+| `OPENAI_API_KEY` | Opcional — fallback caso a chave não venha na requisição |
+
+---
+
 ## Solução de problemas
 
 | Problema | Solução |
 |---|---|
 | Botão não aparece no Facebook | Recarregue a extensão em `chrome://extensions/` |
-| "Failed to fetch" ao analisar | Verifique se o `iniciar.bat` está aberto e rodando |
+| "Failed to fetch" ao analisar | Verifique se a API está online em `/VeritaPlugin/health` |
 | Erro ao analisar | Confirme que sua chave OpenAI tem crédito disponível |
-| Servidor não inicia | Confirme que o Python está instalado e no PATH |
-| Modelo não encontrado | Coloque o `model.safetensors` dentro da pasta `modelo_bert/` |
+| Modal sem estilo | Verifique se `bootstrap.min.css` está na pasta `verita-plugin/` |

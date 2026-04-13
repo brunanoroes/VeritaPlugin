@@ -9,7 +9,7 @@ from classificador_bert import classificar_mensagem
 
 # ── CONFIGURAÇÃO ──────────────────────────────────────────────────────────────
 
-_client_padrao = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+_OPENAI_API_KEY_ENV = os.environ.get("OPENAI_API_KEY")
 
 ARQUIVO_ENTRADA  = "BrScamsFacebook.xlsx"
 ARQUIVO_SAIDA    = "dataset_teste_rag.xlsx"
@@ -114,7 +114,10 @@ def analisar_mensagem(mensagem: str, categoria: str, score: float, api_key: str 
     }
 
     try:
-        client = OpenAI(api_key=api_key) if api_key else _client_padrao
+        chave_final = api_key or _OPENAI_API_KEY_ENV or ""
+        if not chave_final:
+            return {**resultado_vazio, "Erro": "Chave da OpenAI não fornecida."}
+        client = OpenAI(api_key=chave_final)
         messages = montar_prompt(mensagem, categoria, score)
 
         # Schema JSON estrito para Structured Outputs
