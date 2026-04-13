@@ -5,7 +5,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 });
 
 // URL da API — troque pelo endereço do Railway após o deploy
-const API_URL = "https://SEU-PROJETO.up.railway.app";
+const API_URL = "https://veritaplugin-production.up.railway.app";
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "analisarTexto") {

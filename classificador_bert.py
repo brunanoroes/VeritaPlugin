@@ -1,6 +1,6 @@
 import torch
 import torch.nn.functional as F
-from transformers import BertTokenizer, BertForSequenceClassification
+from transformers import AutoTokenizer, BertForSequenceClassification
 
 MODEL_PATH = "modelo_bert"
 
@@ -14,7 +14,7 @@ LABELS = {
 }
 
 # Carregados uma vez quando o módulo é importado
-tokenizer = BertTokenizer.from_pretrained(MODEL_PATH)
+tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
 model = BertForSequenceClassification.from_pretrained(MODEL_PATH)
 model.eval()
 
