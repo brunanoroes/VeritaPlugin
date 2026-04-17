@@ -232,23 +232,31 @@ function showVeritaPluginResult(data) {
         : `Possível golpe de '${data.categoria}'`;
 
     const modal = document.createElement("div");
-    modal.id        = "veritaplugin-modal";
-    modal.className = "position-fixed top-50 start-50 translate-middle";
-    modal.style.zIndex = "999999999999";
-    modal.style.width  = "35rem";
+    modal.id = "veritaplugin-modal";
+    modal.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 999999999999;
+        width: min(35rem, 92vw);
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+    `;
 
     modal.innerHTML = `
-        <div class="card shadow">
-            <div class="card-body p-3">
+        <div class="card shadow" style="display:flex;flex-direction:column;max-height:90vh;overflow:hidden;">
+            <div class="card-body p-3" style="display:flex;flex-direction:column;overflow:hidden;">
 
                 <!-- Header -->
-                <div class="d-flex align-items-center gap-2 mb-3 fw-bold fs-2">
+                <div class="d-flex align-items-center gap-2 mb-3 fw-bold fs-2" style="flex-shrink:0;">
                     <img src="${chrome.runtime.getURL('icon.png')}" style="width:5rem;height:4rem;">
                     <span style="letter-spacing:0;"><span style="color:#1CE47E;">Verita</span><span style="color:#164CEE;">Plugin</span></span>
                 </div>
 
                 <!-- Status -->
-                <div style="${statusStyle}" class="d-flex align-items-center gap-3 py-2 px-3 mb-3">
+                <div style="${statusStyle}flex-shrink:0;" class="d-flex align-items-center gap-3 py-2 px-3 mb-3">
                     <span style="font-size:1.4rem;line-height:1;">${icon}</span>
                     <div>
                         <div style="font-weight:700;font-size:1.2rem;">${title}</div>
@@ -256,39 +264,44 @@ function showVeritaPluginResult(data) {
                     </div>
                 </div>
 
-                <!-- Explicação -->
-                <div class="card bg-light mb-2">
-                    <div class="card-body py-2 px-3">
-                        <div class="fw-bold">Explicação:</div>
-                        <div class="text-secondary" style="font-size:1.05rem;">${data.explicacao || "—"}</div>
+                <!-- Conteúdo com scroll -->
+                <div style="overflow-y:auto;flex:1;min-height:0;">
+
+                    <!-- Explicação -->
+                    <div class="card bg-light mb-2">
+                        <div class="card-body py-2 px-3">
+                            <div class="fw-bold">Explicação:</div>
+                            <div class="text-secondary" style="font-size:1.05rem;">${data.explicacao || "—"}</div>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Base legal -->
-                <div class="card bg-light mb-2">
-                    <div class="card-body py-2 px-3">
-                        <div class="fw-bold">Base legal:</div>
-                        <div class="text-secondary" style="font-size:1.05rem;">${data.baseLegal || "—"}</div>
+                    <!-- Base legal -->
+                    <div class="card bg-light mb-2">
+                        <div class="card-body py-2 px-3">
+                            <div class="fw-bold">Base legal:</div>
+                            <div class="text-secondary" style="font-size:1.05rem;">${data.baseLegal || "—"}</div>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Ações recomendadas -->
-                <div class="card bg-light mb-3">
-                    <div class="card-body py-2 px-3">
-                        <div class="fw-bold">Ações recomendadas:</div>
-                        <div class="text-secondary" style="font-size:1.05rem;">${data.acaoRecomendada || "—"}</div>
+                    <!-- Ações recomendadas -->
+                    <div class="card bg-light mb-3">
+                        <div class="card-body py-2 px-3">
+                            <div class="fw-bold">Ações recomendadas:</div>
+                            <div class="text-secondary" style="font-size:1.05rem;">${data.acaoRecomendada || "—"}</div>
+                        </div>
                     </div>
+
                 </div>
 
-                <!-- Aviso -->
-                <div style="font-size:0.78rem;color:#888;text-align:center;margin-bottom:10px;">
-                    O VeritaPlugin pode cometer erros. Confira informações importantes.
+                <!-- Rodapé fixo -->
+                <div style="flex-shrink:0;">
+                    <div style="font-size:0.78rem;color:#888;text-align:center;margin-bottom:10px;">
+                        O VeritaPlugin pode cometer erros. Confira informações importantes.
+                    </div>
+                    <button id="veritaplugin-close-btn" class="btn btn-primary w-100">
+                        Fechar
+                    </button>
                 </div>
-
-                <!-- Botão fechar -->
-                <button id="veritaplugin-close-btn" class="btn btn-primary w-100">
-                    Fechar
-                </button>
 
             </div>
         </div>
