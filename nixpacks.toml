@@ -1,7 +1,8 @@
 [phases.setup]
-nixPkgs = ["python3", "python3Packages.pip", "gcc"]
+nixPkgs = ["python3", "gcc"]
 
 [phases.install]
 cmds = [
+  "python3 -m ensurepip --upgrade",
   "python3 -m pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt"
 ]
