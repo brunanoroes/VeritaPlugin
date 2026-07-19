@@ -1,14 +1,26 @@
 # VeritaPlugin — Detecção de Golpes Digitais no Facebook com BERTimbau e RAG Jurídico
 
-<!-- =========================================================================
-     PREENCHER ANTES DE SUBMETER AO HotCRP:
-     Substituir o título acima pelo título exato do artigo submetido e o
-     parágrafo abaixo pelo resumo (abstract) do artigo.
-     ========================================================================= -->
+**Artigo relacionado:** *VeritaPlugin: Uma Extensão de Navegador para Detecção Semântica de Fraudes no Facebook* — Universidade Federal Fluminense (UFF)
 
-**Artigo relacionado:** *(preencher com o título exato do artigo submetido)*
+**Resumo do artigo.** A Engenharia Social em redes sociais explora vulnerabilidades para
+iludir usuários, tornando defesas técnicas tradicionais insuficientes. Este trabalho
+apresenta o VeritaPlugin, uma extensão de navegador que detecta fraudes no Facebook por
+meio de um pipeline híbrido BERTimbau, RAG determinístico e GPT-4o. A arquitetura opera em
+conformidade com a LGPD e o resultado apresenta ao usuário a categoria do golpe,
+enquadramento legal e ações recomendadas. Para calibração, foi construído e disponibilizado
+o dataset BrScamsFacebook, com 450 instâncias de golpes reais do contexto brasileiro. Na
+avaliação técnica, o classificador obteve F1-macro de 0,763 ± 0,034 na validação cruzada
+k=5, superando o baseline.
 
-**Resumo do artigo:** *(preencher com o resumo/abstract do artigo submetido)*
+**Abstract.** Social engineering on social networks exploits vulnerabilities to deceive
+users, rendering traditional technical defenses insufficient. This work presents
+VeritaPlugin, a browser extension that detects fraud on Facebook through a hybrid pipeline
+using BERTimbau, deterministic RAG, and GPT-4o. The architecture operates in compliance
+with the LGPD (Brazilian General Data Protection Law), and the result presents the user
+with the scam category, legal framework, and recommended actions. For calibration, the
+BrScamsFacebook dataset was built and made available, containing 450 instances of real
+scams from the Brazilian context. In the technical evaluation, the classifier obtained an
+F1-macro of 0.763 ± 0.034 in the k=5 cross-validation, exceeding the baseline.
 
 **Resumo do artefato.** O VeritaPlugin é uma extensão para Google Chrome que detecta
 golpes digitais em publicações do Facebook em tempo real. O artefato combina dois
@@ -536,13 +548,23 @@ da publicação clicada é enviado à API.
 # Experimentos
 
 Esta seção descreve como reproduzir as principais reivindicações do artigo. As
-reivindicações #1 e #2 são reproduzidas em repositórios complementares (que contêm os
-scripts de treinamento e avaliação); as reivindicações #3 e #4 são reproduzidas neste
-repositório.
+reivindicações #1, #2, #5 e #6 são reproduzidas em repositórios complementares; as
+reivindicações #3 e #4 são reproduzidas neste repositório.
 
-**Tempo total estimado para reproduzir todas as reivindicações:** ≈ 3h30, das quais ≈ 3h
-correspondem ao treinamento do BERTimbau em GPU (reivindicação #1). As reivindicações
-#2, #3 e #4 juntas levam menos de 40 minutos e **não exigem GPU**.
+| # | Reivindicação | Onde reproduzir | Tempo | GPU |
+|---|---|---|---|---|
+| 1 | BERTimbau atinge F1-macro 0,763 ± 0,034 | [treinamento-BERTimbau](https://github.com/brunanoroes/treinamento-BERTimbau) | ≈ 3 h | sim |
+| 2 | BERTimbau supera o baseline TF-IDF + SVM | [Treinamento_TF-IDF-SVM](https://github.com/brunanoroes/Treinamento_TF-IDF-SVM) | ≈ 2 min | não |
+| 3 | O RAG impede citação de leis fora da base curada | este repositório + [evolucao-prompt-RAG](https://github.com/brunanoroes/evolucao-prompt-RAG) | ≈ 30 min | não |
+| 4 | O sistema integrado opera em tempo real | este repositório + [ReplicaTesteFacebook](https://github.com/brunanoroes/ReplicaTesteFacebook) | ≈ 5 min | não |
+| 5 | Usabilidade excelente na SUS (87,0; n = 15) | [ConteudoExtraVeritaPlugin](https://github.com/brunanoroes/ConteudoExtraVeritaPlugin) | ≈ 1 min | não |
+| 6 | Justificativas jurídicas validadas por avaliadores de Direito | [ConteudoExtraVeritaPlugin](https://github.com/brunanoroes/ConteudoExtraVeritaPlugin) | ≈ 1 min | não |
+
+**Tempo total estimado para reproduzir todas as reivindicações:** ≈ 3h40, das quais ≈ 3h
+correspondem ao treinamento do BERTimbau em GPU (reivindicação #1). As demais
+reivindicações juntas levam menos de 45 minutos e **não exigem GPU**. As reivindicações
+**#5 e #6 são verificáveis em ≈ 2 minutos, sem GPU, sem rede e sem custo**, sendo o
+caminho mais rápido para o avaliador constatar resultados do artigo.
 
 ## Reivindicações #1 — O BERTimbau fine-tuned atinge F1-macro de 0,763 ± 0,034 na classificação de golpes em português
 
@@ -609,9 +631,15 @@ três linhas abaixo. Por usar seed fixa e algoritmos determinísticos, este expe
 
 | Modelo | F1-macro |
 |---|---|
-| Classificador por maioria | ≈ 0,17 |
-| TF-IDF + LinearSVC | ≈ 0,67 |
+| Classificador por maioria | 0,048 |
+| TF-IDF + LinearSVC | 0,711 ± 0,027 |
 | **BERTimbau fine-tuned** | **0,763 ± 0,034** |
+
+O ganho do BERTimbau sobre o baseline é de **+0,052 de F1-macro**, concentrado nas
+categorias que dependem de compreensão contextual — *Desinformação Digital* (+0,15) e
+*Seguro* (+0,13). Os intervalos de ±1 desvio padrão dos dois modelos se sobrepõem
+marginalmente, de modo que a evidência favorece o modelo neural sem sustentar
+superioridade categórica: o TF-IDF + SVM é um baseline forte nesta tarefa.
 
 ## Reivindicações #3 — O pipeline RAG impede a citação de dispositivos legais fora da base de conhecimento curada
 
@@ -694,6 +722,94 @@ organizadas por categoria de golpe, acompanhadas da planilha de rotulação.
 
 **Recursos esperados:** ≈ 1,5 GB de RAM (API) + navegador. Tempo: ≈ 5 minutos. Custo:
 ≈ US$ 0,01 por publicação analisada.
+
+## Reivindicações #5 — O VeritaPlugin alcança usabilidade excelente segundo a System Usability Scale
+
+**Onde reproduzir:** [ConteudoExtraVeritaPlugin](https://github.com/brunanoroes/ConteudoExtraVeritaPlugin),
+seção *Experimentos*, Reivindicação #5.
+
+**Estudo.** Questionário **System Usability Scale (SUS)** aplicado a **15 participantes**
+em experimento controlado sobre a *Facebook Replica v1.0*
+([ReplicaTesteFacebook](https://github.com/brunanoroes/ReplicaTesteFacebook)), ambiente que
+expôs todos os participantes aos mesmos cenários. O protocolo foi não diretivo, em duas
+etapas comparativas — exploração **sem** auxílio tecnológico, para estabelecer a percepção
+de risco de base, seguida de navegação **assistida** pelo VeritaPlugin —, tendo o método
+*Think Aloud* como principal instrumento de observação.
+
+**Procedimento:**
+```bash
+git clone https://github.com/brunanoroes/ConteudoExtraVeritaPlugin.git
+cd ConteudoExtraVeritaPlugin
+pip install pandas openpyxl
+# execute o Teste B daquele README, que recalcula o escore a partir dos dados brutos
+```
+
+**Recursos esperados:** CPU apenas, < 512 MB de RAM, ≈ 1 minuto. Sem GPU, sem rede, sem
+custo.
+
+**Resultado esperado:**
+
+| Métrica | Valor |
+|---|---|
+| Participantes | 15 |
+| **Escore SUS médio** | **87,0** |
+| Desvio padrão | 11,2 |
+| Mediana | 87,5 |
+| Mínimo / Máximo | 70,0 / 100,0 |
+| Participantes acima de 68 (média da indústria) | **15 de 15** |
+
+Na escala de referência da SUS, 68 é a média da indústria e valores acima de 80,3
+correspondem à faixa "excelente" (grau A). O escore de 87,0 situa-se nessa faixa, e nenhum
+participante atribuiu escore abaixo da média da indústria. O item menos favorável foi
+*"Considerei o VeritaPlugin mais complexo do que o necessário"* (média 2,53 numa escala de
+5, com polaridade invertida), indicando que parte dos participantes percebeu complexidade
+acima do ideal — o principal ponto de melhoria identificado.
+
+**Determinismo:** total. O cálculo é aritmética simples sobre um arquivo de dados fixo.
+
+## Reivindicações #6 — As justificativas jurídicas geradas pelo pipeline RAG são consideradas adequadas por avaliadores com formação em Direito
+
+**Onde reproduzir:** [ConteudoExtraVeritaPlugin](https://github.com/brunanoroes/ConteudoExtraVeritaPlugin),
+seção *Experimentos*, Reivindicação #6.
+
+**Estudo.** **4 avaliadores** com formação (concluída ou em curso) em Direito avaliaram as
+saídas do **pipeline RAG v3** sobre **18 casos**, totalizando 72 avaliações por critério.
+Cada justificativa foi julgada quanto a pertinência legal, correção jurídica e
+proporcionalidade, além de uma questão de síntese sobre sua adequação a um usuário leigo.
+
+**Procedimento:** execute o **Teste C** do README daquele repositório, que recalcula as
+distribuições a partir dos dados brutos.
+
+**Recursos esperados:** CPU apenas, < 512 MB de RAM, ≈ 1 minuto. Sem GPU, sem rede, sem
+custo.
+
+**Resultado esperado:**
+
+| Critério | Resultado favorável | % |
+|---|---|---|
+| Proporcionalidade | Proporcional à gravidade do caso | **81,9%** |
+| Correção jurídica | Descrição precisa da lei | **76,4%** |
+| Pertinência legal | Dispositivo diretamente aplicável | **68,1%** |
+| Síntese — apresentaria a um leigo | "Sim" | **56,9%** |
+| Síntese — aproveitável ("Sim" + "Com ajustes") | — | **90,3%** |
+| Síntese — rejeitada ("Não") | — | 9,7% |
+
+**Interpretação.** A proporcionalidade é o critério mais bem avaliado, e **nenhuma
+avaliação apontou subestimação da gravidade** — quando o sistema erra a dosagem, erra para
+mais (18,1%), comportamento consistente com o objetivo de alertar o usuário. **90,3% das
+justificativas são aproveitáveis** e apenas 9,7% foram rejeitadas para apresentação a um
+leigo.
+
+Ao mesmo tempo, o resultado delimita o alcance da contribuição: que um terço das
+justificativas requeira ajustes e que 13,9% dos dispositivos sejam considerados não
+pertinentes confirma a ressalva mantida em todo o trabalho — as análises **não substituem
+orientação jurídica profissional**.
+
+**Determinismo:** total. São contagens sobre um arquivo de dados fixo.
+
+**Limitação a considerar:** com 4 avaliadores, os percentuais têm intervalo de confiança
+largo e não permitem calcular concordância entre avaliadores com estabilidade estatística.
+Os resultados são indicativos e qualitativos.
 
 ---
 
