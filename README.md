@@ -37,6 +37,7 @@ reprodução das reivindicações do artigo.
 
 **Autora:** Bruna Norões — brunanoroes@id.uff.br
 
+**Site:** https://verita-plugin-web-site.vercel.app/#hero
 ---
 
 # Estrutura do readme.md
