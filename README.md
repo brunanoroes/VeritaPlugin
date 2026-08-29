@@ -2,6 +2,8 @@
 
 **Artigo relacionado:** *VeritaPlugin: Uma Extensão de Navegador para Detecção Semântica de Fraudes no Facebook* — Universidade Federal Fluminense (UFF)
 
+**Link Artigo SBSeg:** https://sol.sbc.org.br/index.php/sbseg/article/view/44359/44122
+
 **Resumo do artigo.** A Engenharia Social em redes sociais explora vulnerabilidades para
 iludir usuários, tornando defesas técnicas tradicionais insuficientes. Este trabalho
 apresenta o VeritaPlugin, uma extensão de navegador que detecta fraudes no Facebook por
