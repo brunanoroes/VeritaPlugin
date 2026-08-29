@@ -4,6 +4,8 @@
 
 **Link Artigo SBSeg:** https://sol.sbc.org.br/index.php/sbseg/article/view/44359/44122
 
+**Site:** https://verita-plugin-web-site.vercel.app/#hero
+
 **Resumo do artigo.** A Engenharia Social em redes sociais explora vulnerabilidades para
 iludir usuários, tornando defesas técnicas tradicionais insuficientes. Este trabalho
 apresenta o VeritaPlugin, uma extensão de navegador que detecta fraudes no Facebook por
@@ -39,7 +41,6 @@ reprodução das reivindicações do artigo.
 
 **Autora:** Bruna Norões — brunanoroes@id.uff.br
 
-**Site:** https://verita-plugin-web-site.vercel.app/#hero
 ---
 
 # Estrutura do readme.md
